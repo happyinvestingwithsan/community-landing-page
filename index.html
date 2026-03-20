@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Investing | Clarity Over Noise</title>
     
-    <!-- Typography: Inter (Apple-style clean sans-serif) -->
+    <!-- Typography: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,17 +19,11 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         teal: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            500: '#14b8a6',
-                            600: '#0d9488', 
-                            700: '#0f766e',
-                            900: '#134e4a',
+                            50: '#f0fdfa', 100: '#ccfbf1', 500: '#14b8a6', 
+                            600: '#0d9488', 700: '#0f766e', 900: '#134e4a',
                         }
                     }
                 }
@@ -46,28 +40,36 @@
             opacity: 1;
             transform: translateY(0);
         }
-        /* Mobile-Optimized Smooth Scroll */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .apple-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
+        
+        /* Auto-scroll animation for testimonials */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-350px * 3 - 2rem * 3)); }
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch; /* Fix for smooth mobile scrolling */
+        .animate-scroll {
+            display: flex;
+            width: max-content;
+            animation: scroll 40s linear infinite;
         }
-        .apple-shadow {
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
-        }
-        /* Snap scrolling utility */
-        .snap-x {
-            scroll-snap-type: x mandatory;
-        }
-        .snap-center {
-            scroll-snap-align: center;
-        }
+        .animate-scroll:hover { animation-play-state: paused; }
+
+        /* Modal Blur */
+        .modal-overlay { backdrop-filter: blur(8px); background-color: rgba(255,255,255,0.7); }
     </style>
 </head>
 <body class="font-sans text-gray-900 bg-white antialiased selection:bg-teal-100 selection:text-teal-900">
+
+    <!-- FLOATING SECTION INDICATOR (Active on Scroll) -->
+    <div id="section-banner" class="fixed top-24 left-1/2 -translate-x-1/2 z-40 opacity-0 transition-all duration-500 pointer-events-none">
+        <div class="bg-white/90 backdrop-blur-md border border-teal-100 px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></div>
+            <span id="active-section-name" class="text-[10px] uppercase tracking-widest font-bold text-teal-700">Philosophy</span>
+        </div>
+    </div>
+
     <!-- NAVIGATION -->
     <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300 h-20">
         <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
@@ -76,14 +78,57 @@
                 Happy Investing
             </div>
             
-            <a href="#" class="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium text-white bg-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300">
+            <a href="https://chat.whatsapp.com/BQU0jI1cIw18uKrgtWE8tO" target="_blank" class="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium text-white bg-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300">
                 Join the Community
             </a>
         </div>
     </nav>
 
+    <!-- EXPLORE MODAL (The Popup) -->
+    <div id="explore-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 modal-overlay" onclick="toggleExplore()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg bg-white rounded-[2.5rem] p-8 apple-shadow border border-gray-100">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-2xl font-bold tracking-tight">Explore the Community</h3>
+                <button onclick="toggleExplore()" class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors">
+                    <i class="ph ph-x text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <a href="#philosophy" onclick="toggleExplore()" class="group flex items-center justify-between p-4 rounded-2xl hover:bg-teal-50 transition-all">
+                    <div>
+                        <p class="font-semibold text-gray-900 group-hover:text-teal-700">Philosophy</p>
+                        <p class="text-xs text-gray-500">Clarity over noise and stock tips.</p>
+                    </div>
+                    <i class="ph ph-arrow-right text-gray-400 group-hover:text-teal-600 transition-colors"></i>
+                </a>
+                <a href="#pathfinder" onclick="toggleExplore()" class="group flex items-center justify-between p-4 rounded-2xl hover:bg-teal-50 transition-all">
+                    <div>
+                        <p class="font-semibold text-gray-900 group-hover:text-teal-700">Pathfinder Sessions</p>
+                        <p class="text-xs text-gray-500">Weekly deep dives into market psychology.</p>
+                    </div>
+                    <i class="ph ph-arrow-right text-gray-400 group-hover:text-teal-600 transition-colors"></i>
+                </a>
+                <a href="#curriculum" onclick="toggleExplore()" class="group flex items-center justify-between p-4 rounded-2xl hover:bg-teal-50 transition-all">
+                    <div>
+                        <p class="font-semibold text-gray-900 group-hover:text-teal-700">Private Curriculum</p>
+                        <p class="text-xs text-gray-500">A glimpse into our fundamental breakdown.</p>
+                    </div>
+                    <i class="ph ph-arrow-right text-gray-400 group-hover:text-teal-600 transition-colors"></i>
+                </a>
+                <a href="#testimonials" onclick="toggleExplore()" class="group flex items-center justify-between p-4 rounded-2xl hover:bg-teal-50 transition-all">
+                    <div>
+                        <p class="font-semibold text-gray-900 group-hover:text-teal-700">Member Feedback</p>
+                        <p class="text-xs text-gray-500">Real stories from clear-thinking investors.</p>
+                    </div>
+                    <i class="ph ph-arrow-right text-gray-400 group-hover:text-teal-600 transition-colors"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- SECTION 1: HERO -->
-    <section class="relative pt-40 pb-20 md:pt-52 md:pb-32 overflow-hidden flex flex-col items-center justify-center text-center px-6">
+    <section id="hero" class="relative pt-40 pb-20 md:pt-52 md:pb-32 overflow-hidden flex flex-col items-center justify-center text-center px-6">
         <div class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-teal-50 via-white to-white"></div>
         
         <div class="max-w-4xl mx-auto reveal">
@@ -95,10 +140,10 @@
             </p>
             
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-6">
-                <a href="#" class="w-full sm:w-auto px-8 py-4 text-base font-medium text-white bg-teal-600 rounded-full hover:bg-teal-700 transition-all apple-shadow hover:scale-105 duration-300">
+                <button onclick="toggleExplore()" class="w-full sm:w-auto px-8 py-4 text-base font-medium text-white bg-teal-600 rounded-full hover:bg-teal-700 transition-all apple-shadow hover:scale-105 duration-300">
                     Explore the Community
-                </a>
-                <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 text-base font-medium text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-full transition-all duration-300 flex items-center justify-center gap-2">
+                </button>
+                <a href="https://chat.whatsapp.com/BQU0jI1cIw18uKrgtWE8tO" target="_blank" class="w-full sm:w-auto px-8 py-4 text-base font-medium text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-full transition-all duration-300 flex items-center justify-center gap-2">
                     <i class="ph ph-play-circle text-xl"></i> Watch How It Works
                 </a>
             </div>
@@ -106,7 +151,7 @@
     </section>
 
     <!-- SECTION 2: WHAT IS HAPPY INVESTING -->
-    <section class="py-24 bg-white px-6">
+    <section id="philosophy" class="py-24 bg-white px-6 scroll-mt-24">
         <div class="max-w-3xl mx-auto text-center reveal">
             <h2 class="text-xs font-semibold text-teal-600 tracking-widest uppercase mb-4">The Philosophy</h2>
             <h3 class="text-2xl md:text-4xl font-semibold text-gray-900 mb-8 leading-tight">
@@ -118,8 +163,8 @@
         </div>
     </section>
 
-    <!-- SECTION 3: EXPERIENCE PREVIEW (3 CARDS) -->
-    <section class="py-24 bg-gray-50 px-6">
+    <!-- SECTION 3: EXPERIENCE PREVIEW -->
+    <section id="experience" class="py-24 bg-gray-50 px-6 scroll-mt-24">
         <div class="max-w-7xl mx-auto reveal">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white rounded-3xl p-8 apple-shadow border border-gray-100 hover:-translate-y-2 transition-transform duration-300">
@@ -148,13 +193,23 @@
     </section>
 
     <!-- SECTION 4: PATHFINDER PLAYLIST -->
-    <section class="py-32 bg-white px-6">
+    <section id="pathfinder" class="py-32 bg-white px-6 scroll-mt-24">
         <div class="max-w-4xl mx-auto reveal">
             <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 bg-teal-50 text-teal-700 px-4 py-1.5 rounded-full text-xs font-bold mb-4">
+                    <i class="ph-fill ph-lock-key"></i> PRIVATE ACCESS
+                </div>
                 <h2 class="text-3xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-4 px-2">Inside Our Weekly Pathfinder Sessions</h2>
                 <p class="text-xl text-gray-500 font-light">Watch past sessions to see how we navigate the noise.</p>
             </div>
-            <div class="bg-gray-50 rounded-[2rem] md:rounded-[2.5rem] p-3 md:p-8 apple-shadow border border-gray-100">
+            <div class="bg-gray-50 rounded-[2rem] md:rounded-[2.5rem] p-3 md:p-8 apple-shadow border border-gray-100 relative group">
+                <!-- Visual cue for playlist -->
+                <div class="absolute -right-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div class="w-2 h-10 bg-gray-200 rounded-full"></div>
+                    <div class="w-2 h-20 bg-teal-500 rounded-full"></div>
+                    <div class="w-2 h-10 bg-gray-200 rounded-full"></div>
+                </div>
+                
                 <div class="h-[400px] md:h-[600px] w-full rounded-2xl overflow-y-auto no-scrollbar bg-black relative">
                     <iframe 
                         class="absolute inset-0 w-full h-full rounded-xl"
@@ -165,12 +220,15 @@
                         allowfullscreen>
                     </iframe>
                 </div>
+                <div class="mt-4 text-center text-xs text-gray-400 font-medium tracking-widest flex items-center justify-center gap-2">
+                    SCROLL INSIDE THE VIDEO TO BROWSE THE FULL PLAYLIST <i class="ph ph-arrow-down"></i>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- SECTION 5: PRIVATE PLAYLIST PREVIEW -->
-    <section class="py-32 bg-gray-900 text-white px-6 overflow-hidden">
+    <section id="curriculum" class="py-32 bg-gray-900 text-white px-6 overflow-hidden scroll-mt-24">
         <div class="max-w-7xl mx-auto reveal">
             <div class="mb-12 md:flex md:items-end md:justify-between px-2">
                 <div>
@@ -187,26 +245,22 @@
                 </div>
             </div>
             
-            <!-- Horizontal Scroll Container - Optimized for Touch -->
             <div id="playlist-scroll" class="flex overflow-x-auto gap-4 md:gap-6 pb-8 snap-x no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 scroll-smooth">
-                <!-- Card Item 1 -->
                 <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
                     <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/M1tXp93lQKU" title="Course Sample 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/M1tXp93lQKU" title="Course Sample 1" frameborder="0" allowfullscreen></iframe>
                     </div>
                     <h4 class="mt-4 text-lg font-medium px-1">The Mindset of a 10-Year Investor</h4>
                 </div>
-                <!-- Card Item 2 -->
                 <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
                     <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/j_VqfXmS50w" title="Course Sample 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/j_VqfXmS50w" title="Course Sample 2" frameborder="0" allowfullscreen></iframe>
                     </div>
                     <h4 class="mt-4 text-lg font-medium px-1">Reading Fundamentals Without the Jargon</h4>
                 </div>
-                <!-- Card Item 3 -->
                 <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
                     <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/ZzE4H9P9EaU" title="Course Sample 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/ZzE4H9P9EaU" title="Course Sample 3" frameborder="0" allowfullscreen></iframe>
                     </div>
                     <h4 class="mt-4 text-lg font-medium px-1">Building Your Conviction Framework</h4>
                 </div>
@@ -214,52 +268,77 @@
         </div>
     </section>
 
-    <!-- SECTION 6: TESTIMONIALS -->
-    <section class="py-32 bg-gray-50 px-6 overflow-hidden">
-        <div class="max-w-7xl mx-auto reveal">
-            <div class="text-center mb-16">
+    <!-- SECTION 6: TESTIMONIALS (AUTO-SCROLL) -->
+    <section id="testimonials" class="py-32 bg-gray-50 px-6 overflow-hidden scroll-mt-24">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 reveal">
                 <h2 class="text-3xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-4 px-2">Real Investors. Real Clarity.</h2>
                 <p class="text-xl text-gray-500 font-light">Hear from members who found peace in their process.</p>
             </div>
             
-            <!-- Optimized Testimonial Carousel -->
-            <div class="flex overflow-x-auto gap-6 md:gap-8 pb-12 snap-x no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
-                <div class="min-w-[75vw] md:min-w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 snap-center shrink-0 hover:-translate-y-2 transition-transform duration-300">
-                    <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/7X8II6J-6mU" title="Testimonial 1" frameborder="0" allowfullscreen></iframe>
+            <div class="relative w-full overflow-hidden">
+                <!-- Linear Gradient Masks for smooth fade edges on desktop -->
+                <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none hidden md:block"></div>
+                <div class="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none hidden md:block"></div>
+                
+                <!-- Infinite Scroll Row -->
+                <div class="animate-scroll gap-8 py-4">
+                    <!-- Placeholder Card 1 -->
+                    <div class="w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 shrink-0">
+                        <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
+                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/7X8II6J-6mU" title="Testimonial 1" frameborder="0"></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"I finally understand what I'm doing."</p>
+                            <p class="text-xs text-gray-500 mt-1">Sarah J.</p>
+                        </div>
                     </div>
-                    <div class="px-2">
-                        <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
-                        <p class="font-medium text-gray-900 text-sm">"I finally understand what I'm doing."</p>
-                        <p class="text-xs text-gray-500 mt-1">Sarah J.</p>
+                    <!-- Placeholder Card 2 -->
+                    <div class="w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 shrink-0">
+                        <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
+                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/F6n00M6yWQQ" title="Testimonial 2" frameborder="0"></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"The storytelling changed everything."</p>
+                            <p class="text-xs text-gray-500 mt-1">Michael T.</p>
+                        </div>
+                    </div>
+                    <!-- Placeholder Card 3 -->
+                    <div class="w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 shrink-0">
+                        <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
+                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/k9zTr2MAFRg" title="Testimonial 3" frameborder="0"></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"No more anxiety during drops."</p>
+                            <p class="text-xs text-gray-500 mt-1">David R.</p>
+                        </div>
+                    </div>
+                    <!-- REPLICATED FOR INFINITE FEEL -->
+                    <div class="w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 shrink-0">
+                        <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
+                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/7X8II6J-6mU" title="Testimonial 1" frameborder="0"></iframe>
+                        </div>
+                        <div class="px-2"><p class="font-medium text-gray-900 text-sm">"I finally understand..."</p></div>
+                    </div>
+                    <div class="w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 shrink-0">
+                        <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
+                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/F6n00M6yWQQ" title="Testimonial 2" frameborder="0"></iframe>
+                        </div>
+                        <div class="px-2"><p class="font-medium text-gray-900 text-sm">"The storytelling changed..."</p></div>
                     </div>
                 </div>
-                <div class="min-w-[75vw] md:min-w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 snap-center shrink-0 hover:-translate-y-2 transition-transform duration-300">
-                    <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/F6n00M6yWQQ" title="Testimonial 2" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    <div class="px-2">
-                        <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
-                        <p class="font-medium text-gray-900 text-sm">"The storytelling approach changed everything."</p>
-                        <p class="text-xs text-gray-500 mt-1">Michael T.</p>
-                    </div>
-                </div>
-                <div class="min-w-[75vw] md:min-w-[350px] bg-white rounded-[2rem] p-4 apple-shadow border border-gray-100 snap-center shrink-0 hover:-translate-y-2 transition-transform duration-300">
-                    <div class="aspect-[9/16] bg-black rounded-2xl overflow-hidden relative mb-4">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/k9zTr2MAFRg" title="Testimonial 3" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    <div class="px-2">
-                        <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
-                        <p class="font-medium text-gray-900 text-sm">"No more anxiety during market drops."</p>
-                        <p class="text-xs text-gray-500 mt-1">David R.</p>
-                    </div>
-                </div>
+            </div>
+            <div class="text-center mt-12 reveal">
+                <p class="text-sm text-gray-400 font-medium">YOU CAN ADD NEW VIDEOS EASILY BY DUPLICATING CARDS IN THE SCROLL ROW</p>
             </div>
         </div>
     </section>
 
     <!-- SECTION 7: HOW IT WORKS -->
-    <section id="how-it-works" class="py-32 bg-white px-6">
+    <section id="howitworks" class="py-32 bg-white px-6 scroll-mt-24">
         <div class="max-w-5xl mx-auto reveal">
             <h2 class="text-3xl md:text-5xl font-semibold tracking-tight text-center text-gray-900 mb-20">The Learning System</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
@@ -300,7 +379,7 @@
             <p class="text-lg md:text-xl text-teal-100 font-light mb-12 max-w-2xl mx-auto">
                 Stop relying on tips. Start building a framework for lifelong wealth and peace of mind.
             </p>
-            <a href="#" class="inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-teal-600 bg-white rounded-full hover:bg-gray-50 hover:scale-105 transition-all duration-300 apple-shadow">
+            <a href="https://chat.whatsapp.com/BQU0jI1cIw18uKrgtWE8tO" target="_blank" class="inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-teal-600 bg-white rounded-full hover:bg-gray-50 hover:scale-105 transition-all duration-300 apple-shadow">
                 Join Happy Investing
             </a>
             <p class="mt-6 text-xs md:text-sm text-teal-200 font-light">
@@ -324,6 +403,13 @@
     </footer>
 
     <script>
+        // Modal Logic
+        function toggleExplore() {
+            const modal = document.getElementById('explore-modal');
+            modal.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
         // Reveal Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -335,16 +421,37 @@
 
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-        // Sticky Nav shrink
+        // Section Tracker & Banner Logic
+        const sections = document.querySelectorAll('section[id]');
+        const banner = document.getElementById('section-banner');
+        const sectionName = document.getElementById('active-section-name');
+
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
+            const scrollPos = window.scrollY;
+
+            // Nav Shrink
+            if (scrollPos > 50) {
                 nav.classList.add('shadow-sm');
                 nav.classList.replace('h-20', 'h-16');
+                banner.classList.replace('opacity-0', 'opacity-100');
             } else {
                 nav.classList.remove('shadow-sm');
                 nav.classList.replace('h-16', 'h-20');
+                banner.classList.replace('opacity-100', 'opacity-0');
             }
+
+            // Detect Active Section for Banner
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                const sectionHeight = section.offsetHeight;
+                const id = section.getAttribute('id');
+
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    const cleanName = id === 'hero' ? 'Welcome' : id.replace('howitworks', 'System');
+                    sectionName.innerText = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+                }
+            });
         });
     </script>
 </body>
