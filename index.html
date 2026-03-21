@@ -44,18 +44,6 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .apple-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
         
-        /* Auto-scroll animation for testimonials */
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-350px * 3 - 2rem * 3)); }
-        }
-        .animate-scroll {
-            display: flex;
-            width: max-content;
-            animation: scroll 40s linear infinite;
-        }
-        .animate-scroll:hover { animation-play-state: paused; }
-
         /* Modal Blur */
         .modal-overlay { backdrop-filter: blur(8px); background-color: rgba(255,255,255,0.7); }
 
@@ -63,30 +51,43 @@
         .form-input {
             @apply w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 focus:bg-white transition-all outline-none text-sm;
         }
+
+        /* Testimonial slider utilities */
+        .cursor-grab { cursor: grab; }
+        .cursor-grabbing { cursor: grabbing !important; }
     </style>
 </head>
 <body class="font-sans text-gray-900 bg-white antialiased selection:bg-teal-100 selection:text-teal-900">
 
     <!-- FLOATING SECTION INDICATOR -->
-    <div id="section-banner" class="fixed top-24 left-1/2 -translate-x-1/2 z-40 opacity-0 transition-all duration-500 pointer-events-none">
-        <div class="bg-white/90 backdrop-blur-md border border-teal-100 px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2">
+    <button id="section-banner" onclick="toggleExplore()" class="fixed top-24 left-1/2 -translate-x-1/2 z-40 opacity-0 pointer-events-none transition-all duration-500 hover:scale-105 active:scale-95 group">
+        <div class="bg-white/90 backdrop-blur-md border border-teal-100 px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2 group-hover:border-teal-400 group-hover:shadow-md transition-all cursor-pointer">
             <div class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></div>
             <span id="active-section-name" class="text-[10px] uppercase tracking-widest font-bold text-teal-700">Philosophy</span>
+            <i class="ph-bold ph-caret-down text-teal-600 text-xs ml-1 opacity-60 group-hover:opacity-100 transition-opacity"></i>
         </div>
-    </div>
+    </button>
 
     <!-- NAVIGATION -->
     <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300 h-20">
         <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-            <div class="flex items-center gap-2 text-xl font-semibold tracking-tight text-gray-900">
+            <a href="#hero" class="flex items-center gap-2 text-xl font-semibold tracking-tight text-gray-900 hover:opacity-80 transition-opacity">
                 <i class="ph-fill ph-leaf text-teal-600 text-2xl"></i>
-                Happy Investing
-            </div>
-            
-            <!-- Gated CTA: Scroll to Form -->
-            <a href="#access-form" class="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium text-white bg-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300">
-                Join the Community
+                <span class="hidden sm:inline">Happy Investing</span>
             </a>
+            
+            <div class="flex items-center gap-3 md:gap-4">
+                <!-- Persistent Menu Button -->
+                <button onclick="toggleExplore()" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-full hover:bg-gray-50 transition-all border border-gray-200 shadow-sm hover:shadow active:scale-95">
+                    <i class="ph ph-list text-lg"></i>
+                    <span class="hidden sm:inline">Menu</span>
+                </button>
+                
+                <!-- Gated CTA: Scroll to Form -->
+                <a href="#access-form" class="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium text-white bg-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300">
+                    Join the Community
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -241,7 +242,7 @@
                 <div class="h-[300px] md:h-[450px] w-full rounded-2xl overflow-y-auto no-scrollbar bg-black relative">
                     <iframe 
                         class="absolute inset-0 w-full h-full rounded-xl"
-                        src="https://www.youtube.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG" 
+                        src="https://www.youtube.com/embed/videoseries?list=PLSaZHvJGmwxW1NXmYAQK39KEwuP5b1dpR" 
                         title="YouTube video player" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -274,80 +275,200 @@
             </div>
             
             <div id="playlist-scroll" class="flex overflow-x-auto gap-4 md:gap-6 pb-8 snap-x no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 scroll-smooth">
+                <!-- Video 1 -->
                 <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
                     <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/M1tXp93lQKU" title="Course Sample 1" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/MT77iHNPCLg" title="Why my GTT is not Executed ?" frameborder="0" allowfullscreen></iframe>
                     </div>
-                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">The Mindset of a 10-Year Investor</h4>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Why my GTT is not Executed ?</h4>
                 </div>
+                <!-- Video 2 -->
                 <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
                     <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/j_VqfXmS50w" title="Course Sample 2" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/TvW2mK7VfB0" title="Should we follow trend | Gold | Silver | Crude" frameborder="0" allowfullscreen></iframe>
                     </div>
-                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Reading Fundamentals Without the Jargon</h4>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Should we follow trend | Gold | Silver | Crude</h4>
                 </div>
+                <!-- Video 3 -->
                 <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
                     <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
-                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/ZzE4H9P9EaU" title="Course Sample 3" frameborder="0" allowfullscreen></iframe>
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/XmyyentuH64" title="Income Tax - LTCG & STCG | Using our parents account" frameborder="0" allowfullscreen></iframe>
                     </div>
-                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Building Your Conviction Framework</h4>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Income Tax - LTCG & STCG | Using our parents account</h4>
+                </div>
+                <!-- Video 4 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/IB9_WGCfQYA" title="Quick Discussion on Bajaj Holdings" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Quick Discussion on Bajaj Holdings</h4>
+                </div>
+                <!-- Video 5 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/r6wH90zx9xw" title="Why HDFC & ITC do not have Promoter Holding ?" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Why HDFC & ITC do not have Promoter Holding ?</h4>
+                </div>
+                <!-- Video 6 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/FErZYkU0nR4" title="Why we need to ignore brokerage firm's rating?" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Why we need to ignore brokerage firm's rating?</h4>
+                </div>
+                <!-- Video 7 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/UuKkuVY_zDU" title="How this community helps to navigate the uncertainties with honesty!" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">How this community helps to navigate the uncertainties with honesty!</h4>
+                </div>
+                <!-- Video 8 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/IPz3NFX9ETk" title="Why this Community is different from Telegram Channels these days?" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Why this Community is different from Telegram Channels these days?</h4>
+                </div>
+                <!-- Video 9 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/7_0bKZMCJgk" title="How we handle sector allocation!" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">How we handle sector allocation!</h4>
+                </div>
+                <!-- Video 10 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/hzkViM7iefs" title="Why Risk Management is more important than great opportunity ? (Page Industries)" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">Why Risk Management is more important than great opportunity ?</h4>
+                </div>
+                <!-- Video 11 -->
+                <div class="min-w-[82vw] md:min-w-[450px] lg:min-w-[550px] snap-center shrink-0">
+                    <div class="aspect-video bg-gray-800 rounded-2xl overflow-hidden relative border border-gray-800">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/QmLtG1K0KTY" title="You will watch it, If you are blessed!" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <h4 class="mt-4 text-lg font-medium px-1 text-gray-100">You will watch it, If you are blessed!</h4>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION 6: TESTIMONIALS -->
+    <!-- SECTION 6: TESTIMONIALS (Consolidated Community Feedback) -->
     <section id="testimonials" class="py-32 bg-gray-50 px-6 overflow-hidden scroll-mt-24">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-3xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-4 px-2">Real Investors. Real Clarity.</h2>
-                <p class="text-xl text-gray-500 font-light">Hear from members who found peace in their process.</p>
+                <h2 class="text-3xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-4 px-2">The Voice of the Tribe</h2>
+                <p class="text-xl text-gray-500 font-light">Hear our collective answers on finding peace, clarity, and transformation.</p>
             </div>
             
-            <div class="relative w-full overflow-hidden">
+            <div class="relative w-full">
+                <!-- Gradients for smooth edge fade -->
                 <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none hidden md:block"></div>
                 <div class="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none hidden md:block"></div>
                 
-                <div class="animate-scroll gap-8 py-4">
-                    <!-- Placeholder Card 1 -->
-                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0">
-                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5">
-                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/7X8II6J-6mU" title="Testimonial 1" frameborder="0"></iframe>
+                <!-- Draggable / Auto-scrolling container -->
+                <div id="testimonial-track" class="flex overflow-x-auto gap-8 py-4 no-scrollbar cursor-grab active:cursor-grabbing select-none" style="scroll-behavior: auto;">
+                    
+                    <!-- Card 1 -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/FPzenlQR9Tg" title="What do you feel about this community?" frameborder="0" allowfullscreen></iframe>
                         </div>
                         <div class="px-2">
                             <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
-                            <p class="font-medium text-gray-900 text-sm">"I finally understand what I'm doing."</p>
-                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Sarah J. • Active Learner</p>
+                            <p class="font-medium text-gray-900 text-sm">"What do you feel about this community?"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • The Tribe</p>
                         </div>
                     </div>
-                    <!-- Placeholder Card 2 -->
-                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0">
-                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5">
-                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/F6n00M6yWQQ" title="Testimonial 2" frameborder="0"></iframe>
+                    
+                    <!-- Card 2 -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/tKDNMwBrJLE" title="Before Vs After Happy Investing" frameborder="0" allowfullscreen></iframe>
                         </div>
                         <div class="px-2">
                             <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
-                            <p class="font-medium text-gray-900 text-sm">"The storytelling changed everything."</p>
-                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Michael T. • Batch 3</p>
+                            <p class="font-medium text-gray-900 text-sm">"Before vs. After Happy Investing"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • Transformations</p>
                         </div>
                     </div>
-                    <!-- Placeholder Card 3 -->
-                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0">
-                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5">
-                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/k9zTr2MAFRg" title="Testimonial 3" frameborder="0"></iframe>
+                    
+                    <!-- Card 3 -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/A4x1esTKWCM" title="Transformation | Aha Moment" frameborder="0" allowfullscreen></iframe>
                         </div>
                         <div class="px-2">
                             <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
-                            <p class="font-medium text-gray-900 text-sm">"No more anxiety during drops."</p>
-                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">David R. • Long-term Tribe</p>
+                            <p class="font-medium text-gray-900 text-sm">"The Aha Moment & Transformation"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • Breakthroughs</p>
                         </div>
                     </div>
-                    <!-- Duplicates for loop -->
-                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0">
-                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5">
-                            <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/7X8II6J-6mU" title="Testimonial 1" frameborder="0"></iframe>
+
+                    <!-- Card 4 -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/4ihBP7lc9Ac" title="Message for Future Community Members" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"A Message to Future Members"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • Passing It On</p>
                         </div>
                     </div>
+
+                    <!-- Duplicated Set (For infinite loop illusion) -->
+                    <!-- Card 1 Duplicated -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/P3G8Yv8Kc7A" title="What do you feel about this community?" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"What do you feel about this community?"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • The Tribe</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 Duplicated -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/tKDNMwBrJLE" title="Before Vs After Happy Investing" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"Before vs. After Happy Investing"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • Transformations</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3 Duplicated -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/A4x1esTKWCM" title="Transformation | Aha Moment" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"The Aha Moment & Transformation"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • Breakthroughs</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 Duplicated -->
+                    <div class="w-[380px] md:w-[450px] bg-white rounded-3xl p-5 apple-shadow border border-gray-100 shrink-0 select-none">
+                        <div class="aspect-video bg-black rounded-xl overflow-hidden relative mb-5 pointer-events-none">
+                            <iframe class="absolute inset-0 w-full h-full pointer-events-auto" src="https://www.youtube.com/embed/4ihBP7lc9Ac" title="Message for Future Community Members" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="px-2">
+                            <div class="flex text-teal-500 mb-2 text-xs"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i></div>
+                            <p class="font-medium text-gray-900 text-sm">"A Message to Future Members"</p>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">Collective Voice • Passing It On</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -513,12 +634,14 @@
     </footer>
 
     <script>
+        // Modal Logic
         function toggleExplore() {
             const modal = document.getElementById('explore-modal');
             modal.classList.toggle('hidden');
             document.body.classList.toggle('overflow-hidden');
         }
 
+        // Scroll Observer Logic
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -541,10 +664,12 @@
                 nav.classList.add('shadow-sm');
                 nav.classList.replace('h-20', 'h-16');
                 banner.classList.replace('opacity-0', 'opacity-100');
+                banner.classList.remove('pointer-events-none');
             } else {
                 nav.classList.remove('shadow-sm');
                 nav.classList.replace('h-16', 'h-20');
                 banner.classList.replace('opacity-100', 'opacity-0');
+                banner.classList.add('pointer-events-none');
             }
 
             sections.forEach(section => {
@@ -554,16 +679,75 @@
 
                 if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
                     const cleanName = id === 'hero' ? 'Welcome' : 
-                                    id === 'howitworks' ? 'System' : 
-                                    id === 'curriculum' ? 'Knowledge' : 
-                                    id === 'access-form' ? 'Access' :
-                                    id.replace('howitworks', 'System');
+                                      id === 'howitworks' ? 'System' : 
+                                      id === 'curriculum' ? 'Knowledge' : 
+                                      id === 'access-form' ? 'Access' :
+                                      id.replace('howitworks', 'System');
                     sectionName.innerText = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
                 }
             });
         });
 
+        // ==========================================
+        // Interactive Auto-Scrolling Testimonials 
+        // ==========================================
+        const track = document.getElementById('testimonial-track');
+        let isHovered = false;
+        let isDragging = false;
+        let startX, scrollLeft;
+
+        // The auto-scroll functionality
+        function autoScroll() {
+            if (!isHovered && !isDragging && track) {
+                track.scrollLeft += 1;
+                
+                // Infinite loop illusion: if we scroll halfway (past the original items), reset to 0 seamlessly
+                if (track.scrollLeft >= (track.scrollWidth / 2)) {
+                    track.scrollLeft = 0;
+                }
+            }
+            requestAnimationFrame(autoScroll);
+        }
+
+        if (track) {
+            // Mouse Dragging Logic
+            track.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                track.classList.add('cursor-grabbing');
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+            });
+            track.addEventListener('mouseleave', () => {
+                isDragging = false;
+                isHovered = false;
+                track.classList.remove('cursor-grabbing');
+            });
+            track.addEventListener('mouseup', () => {
+                isDragging = false;
+                track.classList.remove('cursor-grabbing');
+            });
+            track.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - track.offsetLeft;
+                const walk = (x - startX) * 2; // Speed multiplier for dragging
+                track.scrollLeft = scrollLeft - walk;
+            });
+
+            // Pause on hover or touch
+            track.addEventListener('mouseenter', () => { isHovered = true; });
+            track.addEventListener('touchstart', () => { isHovered = true; }, { passive: true });
+            track.addEventListener('touchend', () => { 
+                setTimeout(() => { isHovered = false; }, 1000); // Resume shortly after touch release
+            });
+
+            // Start the auto-scroll loop
+            requestAnimationFrame(autoScroll);
+        }
+
+        // ==========================================
         // FORM LOGIC
+        // ==========================================
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxgp_WkuNBNoW7e22PWn35kydz2nFZ5nHdGT29f3118bqcBBw8QrhSnxAV2nAPCNC3F/exec';
         const form = document.getElementById('circleAccessForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -579,7 +763,6 @@
             submitBtn.innerHTML = '<i class="ph ph-circle-notch animate-spin text-2xl"></i> Granting Access...';
             errorMsg.classList.add('hidden');
 
-            // 1. Collect values from the form exactly matching the Apps Script JSON format expectations
             const payload = {
                 name: form.name.value,
                 whatsapp: form.whatsapp.value,
@@ -589,7 +772,6 @@
                 consent: form.consent.checked ? "Yes" : "No"
             };
 
-            // 2. Send data using fetch with no-cors to bypass Google Script Cross-Origin restrictions
             fetch(scriptURL, { 
                 method: 'POST', 
                 mode: 'no-cors', 
@@ -599,11 +781,8 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                // Success UI (no-cors response is opaque, so we trigger success on resolution)
                 formContainer.classList.add('hidden');
                 successState.classList.remove('hidden');
-                
-                // Optional: Autofocus the WhatsApp button for better UX
                 successState.querySelector('a').focus();
             })
             .catch(error => {
@@ -627,7 +806,6 @@
                         behavior: 'smooth'
                     });
 
-                    // If navigating to form, autofocus name field
                     if (targetId === '#access-form') {
                         setTimeout(() => {
                             document.querySelector('input[name="name"]').focus();
